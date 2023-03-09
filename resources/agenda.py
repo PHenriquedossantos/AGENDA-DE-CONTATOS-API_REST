@@ -1,4 +1,5 @@
 from flask_restful import Resource, reqparse
+from models.agenda import AgendaModel
 agenda = [
     {
         'agenda_id': '1',
@@ -34,13 +35,7 @@ agenda = [
 ]
 
 
-class AgendaModel:
-    def __init__(self, agenda_id, nome, numero, email, cidade) -> None:
-        self.agenda_id = agenda_id
-        self.nome = nome
-        self.numero = numero
-        self.email = email
-        self.cidade = cidade
+
 
 class Agenda(Resource):
     def get(self):
@@ -49,7 +44,7 @@ class Agenda(Resource):
 class Contato(Resource):
     argumentos = reqparse.RequestParser()
     argumentos.add_argument('nome')
-    argumentos.add_argument('numero contato')
+    argumentos.add_argument('numero')
     argumentos.add_argument('email')
     argumentos.add_argument('cidade')
 
@@ -68,13 +63,15 @@ class Contato(Resource):
 
     def post(self, agenda_id):
         dados = Contato.argumentos.parse_args()
-        novo_contato = {'agenda_id': agenda_id, **dados}
+        obj_contato = AgendaModel(agenda_id, **dados)
+        novo_contato = obj_contato.json()
         agenda.append(novo_contato)
         return novo_contato, 200
 
     def put(self, agenda_id):
         dados = Contato.argumentos.parse_args()
-        novo_contato = {'agenda_id': agenda_id, **dados}
+        obj_contato = AgendaModel(agenda_id, **dados)
+        novo_contato = obj_contato.json()
         pointer_contato = Contato.find_agenda(agenda_id)
         if pointer_contato:
             pointer_contato.update(novo_contato)
