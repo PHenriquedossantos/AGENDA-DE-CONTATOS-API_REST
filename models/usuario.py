@@ -22,7 +22,6 @@ class UserModel(banco.Model):
     
     @classmethod
     def find_user(cls, user_id):
-        #user = cls.query.get(user_id)
         user = cls.query.filter_by(user_id=user_id).first()
         if user:
             return user
@@ -34,12 +33,10 @@ class UserModel(banco.Model):
         if user:
             return user
         return None
-
+    
     def save_user(self):
         banco.session.add(self)
         banco.session.commit()
-
-
 
     def delete_user(self):
         banco.session.delete(self)
